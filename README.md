@@ -88,7 +88,7 @@ Sample product.json
 a. Automate:
 
     1. chmod +x setup.sh
-    2. ./setup.sh
+    2. source setup.sh
 
 b. Manual
 
