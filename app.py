@@ -13,9 +13,10 @@ headers = {
 def product_parser(s):
 
     page = requests.get(s[0], headers=headers)
-
     try:
         doc = html.fromstring(page.content)
+
+        # Fetching product attributes
         prod_name = doc.xpath("//h1[@itemprop='name']//text()")[0]
 
         prod_id = re.findall('(\.*Product ID : \d*)', page.content)[0].split(" ")[3]
@@ -28,11 +29,13 @@ def product_parser(s):
 
         prod_discount = doc.xpath("//span[@class='you-save']//text()")
 
+        # product with no discount
         if not prod_discount:
             prod_discount = 0
         else:
             prod_discount = prod_discount[0]
 
+        # product json structure
         data = {
             'NAME': prod_name,
             'PRODUCT_ID': prod_id,
@@ -45,11 +48,15 @@ def product_parser(s):
             'EST DELIVERY': {}
         }
 
+        # Pin codes list (can be extended more)
         pin_codes = [560070, 575001, 671551]
+
+        # Get request to the ajax call for getting product availability at the input pin codes
         for code in pin_codes:
             response = requests.get('http://www.shopclues.com/nss.php?pincode_no='+str(code)+'&product_ids='+str(prod_id))
             if response.status_code == 200:
                 json_data = json.loads(response.content)
+                # Product availability is 1 if found else 0
                 if 'pin_result' in json_data:
                     if json_data['pin_result'] != -1 or json_data['pin_result'] != 0:
                         data['EST DELIVERY'].update({code: [json_data['sdate'], json_data['fdate']]})
@@ -65,8 +72,7 @@ def product_parser(s):
         return data
 
     except Exception as e:
-        traceback.print_exc()
-        print e
+        traceback.print_exc(e)
 
 
 def extract_urls():
@@ -76,6 +82,7 @@ def extract_urls():
     text_file = open("Output.txt", "w")
     text_file.write(page.content)
     a = []
+    # Regex for fetching first 10 product urls
     r = re.compile('(?<=href=").*?(?=")(?=.*class="name")')
     f = open('Output.txt', 'r')
     count = 1
@@ -86,10 +93,14 @@ def extract_urls():
                 count += 1
             else:
                 break
+
     data = {
         'url': a
     }
+
+    # file with the url json
     f1 = open('urls.json', 'w')
+    # file with the product json
     f2 = open('products.json', 'w')
     json.dump(data, f1, indent=4)
     res = []
