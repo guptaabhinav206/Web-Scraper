@@ -105,3 +105,4 @@ b. Manual
 
     python app.py 
 
+# Note : The execution time of the application will depend on the third party response time.
