@@ -1,6 +1,6 @@
 # Web-Scraper
 
-A simple web-scraper to get the first 10 products url's and start crawling the relevant data for those. 
+A simple web-scraper to get the first 10 products url's and start crawling the relevant data for those products. 
 I have tried to incorporate minimal use of existing sources. I have used regular expressions and lxml library to scrap the data. 
 
 Product attributes fetched :
