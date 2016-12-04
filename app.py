@@ -18,15 +18,10 @@ def product_parser(s):
 
         # Fetching product attributes
         prod_name = doc.xpath("//h1[@itemprop='name']//text()")[0]
-
         prod_id = re.findall('(\.*Product ID : \d*)', page.content)[0].split(" ")[3]
-
         category = doc.xpath("//span[@itemprop='title']//text()")[3]
-
         prod_thumbnail = doc.xpath("//img[@title='%s']/@src2" %prod_name)[0]
-
         prod_price = doc.xpath("//meta[@itemprop='price']/@content")[0]
-
         prod_discount = doc.xpath("//span[@class='you-save']//text()")
 
         # product with no discount
